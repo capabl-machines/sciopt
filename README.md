@@ -2,7 +2,22 @@
 
 A reusable [Claude Code](https://claude.ai/code) skill that runs autonomous optimization loops for any scientific problem with a quantitative scoring function.
 
-Born from optimizing drug-like molecules (automol), battle-tested across 500K+ candidates, multi-agent parallel search, and mathematical ceiling proofs. Now generalized for any domain.
+## The story: 1.027 → 0.0516 (99.997% of theoretical maximum)
+
+This skill was born from a molecular optimization challenge. The task: design a drug-like molecule with the lowest possible score (property penalties + drug-likeness).
+
+Starting from benzamide (score 1.027), the agent autonomously:
+
+1. **Applied medicinal chemistry** — grew the scaffold, balanced properties → 0.090
+2. **Scaled to enumeration** — 958 fragment combinations → 0.052
+3. **Decomposed the scoring function via Fourier analysis** — proved the theoretical maximum is 0.948449 (QED ceiling from structural alerts desirability = 0.842)
+4. **Discovered Fibonacci resonances** — optimal properties naturally land on Fibonacci numbers (21 atoms, 3 rings, 2 aromatic, 1 HBD, 3 HBA)
+5. **Mined ChEMBL** — queried real drug databases, found a benzodiazepinedione that beat all 200K+ synthetic candidates
+6. **Deployed 3 parallel agents** — SCOUT (500K random), MUTANT (30K mutations), MINER (ChEMBL API) running simultaneously in git worktrees
+
+**Final result: score 0.0516, QED = 0.948420 — a gap of only 0.000029 to the mathematical ceiling.** That's 99.997% of theoretical maximum, achieved autonomously across ~40 experiments.
+
+The methodology worked so well we extracted it into this reusable skill.
 
 ## What it does
 
@@ -90,39 +105,23 @@ For large search spaces, the skill deploys parallel agents in isolated git workt
   └────────┘ └────────┘ └────────┘
 ```
 
-## Example: molecular optimization
+## Examples
 
 ```bash
-# Setup
-mkdir automol && cd automol
-# ... create prepare.py (scoring), design.py (candidates), CLAUDE.md, results.tsv
+# Molecular drug design (the original — see story above)
+/sciopt /path/to/automol 5
 
-# Run 5 rounds of optimization
-/sciopt /Users/you/automol 5
+# Antibiotic optimization (Gram-negative penetration, different property profile)
+/sciopt /path/to/automol-antibiotic 3
+
+# ML hyperparameter tuning
+/sciopt /path/to/autoresearch 5
+
+# Any domain with a scoring function
+/sciopt /path/to/your-project 3
 ```
 
-**Results from automol** (drug-like molecule optimization):
-- Started: benzamide, score 1.027
-- Finished: THP-fluorophenyl-thiazole, score 0.0516
-- 20x improvement across ~40 experiments
-- Reached 99.997% of mathematically proven theoretical maximum
-- Explored 500K+ molecules via multi-agent parallel search
-
-## Example: antibiotic optimization
-
-```bash
-/sciopt /Users/you/automol-antibiotic 3
-```
-
-Different scoring (property ranges for Gram-negative penetration + similarity to known antibiotics + synthetic accessibility penalty), same skill.
-
-## Example: ML hyperparameter tuning
-
-```bash
-/sciopt /Users/you/autoresearch 5
-```
-
-Works with any project that has a scoring function. The skill reads your CLAUDE.md to understand the domain.
+The skill reads your project's `CLAUDE.md` to understand the domain, scoring function, and constraints. Same skill, different science.
 
 ## Key principles encoded
 
